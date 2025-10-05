@@ -4,3 +4,9 @@
   margin-right: auto;
   padding-top: 8rem;
 }
+
+@media screen and (max-width: 780px) {
+  .wrapper-page {
+    width: 80%;
+  }
+}

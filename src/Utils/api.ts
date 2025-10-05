@@ -242,7 +242,7 @@ export async function createAccount(account: Omit<Account, 'id'>): Promise<strin
 }
 
 export async function SigninAccount(account: Omit<Account, 'id'>): Promise<string | undefined> {
-    console.log(account)
+
     try {
         const response = await fetch(`${apiUrl}/auth/signin`, {
             method: 'POST',
@@ -345,8 +345,7 @@ export async function uploadFileToS3(uploadUrl: string, file: File): Promise<boo
 /* BEAUTIFY */
 
 export async function Beautify(data: string): Promise<string> {
-    console.log("entered")
-    console.log(data)
+
     try {
         const response = await fetch(`${apiUrl}/beautify`, {
             method: 'POST',
@@ -361,8 +360,6 @@ export async function Beautify(data: string): Promise<string> {
         }
         
         const body: string = await response.json();
-
-        console.log(body)
         
         if (!body || body.length < 50) { 
              console.error('Response was not a valid-looking token.');
