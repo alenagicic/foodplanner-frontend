@@ -17,6 +17,7 @@ export default function FloatingNavbar() {
   return (
     <nav className="floating-nav d-flex flex-column align-items-center p-3 shadow rounded">
 
+
       {/* Create */}
       <button className="nav-item" data-label="Skapa" onClick={() => navigate('/add')}>
         <i className="bi bi-plus-circle fs-3"></i>
