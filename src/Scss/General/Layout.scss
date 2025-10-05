@@ -1,0 +1,187 @@
+@use "sass:color";
+
+$font-stack: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+             Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+$color-bg: #f4f1ec;
+$color-text: #333;
+$color-accent: #222222;
+$color-border: #dddddd;
+$color-focus: #5F9EA0;
+$color-hover: #555555;
+
+
+// === FONTS === //
+
+body {
+    color: #333333; 
+    line-height: 1.6;
+    margin: 0 auto;
+    background-color: $color-bg;
+    padding: 1rem;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    //line-height: 1.5;
+    @extend .body-merriweather-sans; 
+}
+
+.body-merriweather-sans {
+    font-family: 'Merriweather Sans', sans-serif;
+    font-weight: 400; 
+    font-size: 1.1rem;
+    letter-spacing: -0.01em;
+}
+
+.body-bitter {
+    font-family: 'Bitter', serif;
+    font-weight: 400; 
+    font-size: 1.05rem;
+}
+
+.body-lusitana {
+    font-family: 'Lusitana', serif;
+    font-weight: 400; 
+    font-size: 1.15rem;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+// === Base Styles === //
+// body {
+//   font-family: $font-stack;
+//   font-size: 16px;
+//   line-height: 1.5;
+//   background-color: $color-bg;
+//   color: $color-text;
+//   -webkit-font-smoothing: antialiased;
+//   -moz-osx-font-smoothing: grayscale;
+//   padding: 1rem;
+//   min-height: 100vh;
+//   display: flex;
+//   flex-direction: column;
+// }
+
+// === Typography === //
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  color: $color-text;
+  margin-bottom: 1rem;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+// === Links === //
+a {
+  color: $color-accent;
+  text-decoration: none;
+  transition: color 0.3s;
+
+  &:hover {
+    color: $color-hover;
+  }
+}
+
+// === Buttons === //
+button {
+  font-family: inherit;
+  font-size: inherit;
+  border-radius: 1rem;
+  cursor: pointer;
+  min-width: 3rem;
+  min-height: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: 2px solid transparent;
+  outline-offset: 0.2rem;
+  background-color: #e0ddd7;
+  color: $color-text;
+  border: 1px solid $color-border;
+  transition: background-color 0.2s, box-shadow 0.2s;
+
+  i {
+    font-size: 1.2rem;
+  }
+
+  &:hover {
+    outline: 2px solid $color-focus;
+  }
+
+  &.btn-actual {
+    padding: 1rem;
+    column-gap: 0.5rem;
+    background-color: #5F9EA0;
+  }
+
+  &.btn-tryus {
+    margin-top: 1rem;
+    width: 8rem;
+    height: 3.5rem;
+  }
+}
+
+// === Form Fields === //
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+  color: $color-text;
+  border: 1px solid $color-border;
+  border-radius: 1rem;
+  padding: 1rem;
+  outline: 3px solid transparent;
+  transition: border-color 0.3s, outline 0.3s;
+  min-height: 4rem;
+
+  &:focus {
+    border-color: #ddd;
+    outline: 3px solid $color-focus;
+    outline-offset: 0.2rem;
+  }
+}
+
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  $autofill-bg: #e0ddd7; 
+  
+  -webkit-box-shadow: 0 0 0px 1000px $autofill-bg inset;
+  
+  -webkit-text-fill-color: $color-text;
+  
+  transition: background-color 5000s ease-in-out 0s; 
+}
+
+textarea {
+  min-height: 10rem;
+  resize: vertical;
+}
+
+select {
+  min-width: 12rem;
+}
+
+// === Layout === //
+.wrapper-nav-partial {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  column-gap: 1rem;
+}
+
+// === Modals / Overlays === //
+.modal,
+.overlay {
+  background-color: rgba(255, 255, 255, 0.8);
+  color: $color-text;
+}

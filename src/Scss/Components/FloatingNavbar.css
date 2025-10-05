@@ -1,0 +1,36 @@
+.floating-nav {
+  width: 60px;
+  gap: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  top: 0px;
+  padding-top: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.floating-nav .nav-item {
+  cursor: pointer;
+  position: relative;
+}
+.floating-nav .nav-item::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 60px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #5F9EA0;
+  color: white;
+  padding: 1rem;
+  border-radius: 1rem;
+  font-size: 0.85rem;
+  opacity: 0;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 100;
+}
+.floating-nav .nav-item:hover::after {
+  opacity: 1;
+}

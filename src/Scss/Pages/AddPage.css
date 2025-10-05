@@ -1,0 +1,206 @@
+.wrapper-page {
+  width: 100%;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+}
+.wrapper-page h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.2rem;
+}
+.wrapper-page .wrapper-input-recipe {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 1.5rem;
+  padding-bottom: 2rem;
+}
+.wrapper-page .wrapper-input-recipe textarea {
+  width: 100%;
+  min-height: 20rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: #fff;
+  color: #111;
+  resize: vertical;
+}
+.wrapper-page .wrapper-input-recipe label {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.wrapper-page .wrapper-input-recipe input[type=text],
+.wrapper-page .wrapper-input-recipe input[type=file] {
+  font-size: 1rem;
+  padding: 0.8rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  color: #111;
+  font-family: inherit;
+}
+.wrapper-page .wrapper-input-recipe .upload-image-btn {
+  all: unset;
+  cursor: pointer;
+  color: #fff;
+  border-radius: 1rem;
+  font-size: 1rem;
+  text-align: center;
+  transition: background-color 0.3s, box-shadow 0.2s;
+  max-width: 10rem;
+  min-height: 3.5rem;
+  background-color: #5F9EA0;
+  outline-offset: 0.2rem;
+}
+.wrapper-page .wrapper-input-recipe .upload-image-btn:hover {
+  outline: 2px solid #5F9EA0;
+}
+.wrapper-page .wrapper-input-recipe .tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.wrapper-page .wrapper-input-recipe .tag-list .tag-pill {
+  border-radius: 16px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  -moz-column-gap: 0.8rem;
+       column-gap: 0.8rem;
+  padding: 1rem 1.5rem;
+  text-transform: capitalize;
+  background-color: #5F9EA0;
+  color: #eee;
+  font-weight: 600;
+}
+.wrapper-page .wrapper-input-recipe .tag-list .tag-pill .remove-tag-btn {
+  all: unset;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  min-width: 2rem;
+  min-height: 2rem;
+  color: #f4f1ec;
+  outline: 2px solid transparent;
+  font-size: 1rem;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+.wrapper-page .wrapper-input-recipe .tag-list .tag-pill .remove-tag-btn i {
+  font-size: 1.8rem;
+}
+.wrapper-page .wrapper-input-recipe .tag-list .tag-pill .remove-tag-btn:hover {
+  background-color: transparent;
+  color: #f4f1ec;
+}
+.wrapper-page .wrapper-input-recipe .tag-label {
+  display: flex;
+  align-items: center;
+  -moz-column-gap: 0.2rem;
+       column-gap: 0.2rem;
+}
+.wrapper-page .wrapper-input-recipe .tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+  font-size: 0.9rem;
+  margin-left: 0.4rem;
+  cursor: pointer;
+  align-items: center;
+}
+.wrapper-page .wrapper-input-recipe .tooltip-wrapper .tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.4rem;
+  white-space: nowrap;
+  z-index: 10;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.wrapper-page .wrapper-input-recipe .tooltip-wrapper:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+.wrapper-page .wrapper-input-recipe .tooltip-wrapper svg {
+  vertical-align: middle;
+  margin-bottom: 0.05rem;
+}
+.wrapper-page .wrapper-input-recipe .image-label {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.wrapper-page .wrapper-input-recipe .image-preview-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.wrapper-page .wrapper-input-recipe .image-preview-list .image-preview-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 150px;
+  height: 150px;
+}
+.wrapper-page .wrapper-input-recipe .image-preview-list .image-preview-wrapper img.image-thumb {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+}
+.wrapper-page .wrapper-input-recipe .image-preview-list .image-preview-wrapper .remove-image-btn {
+  all: unset;
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: red;
+  color: white;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  transition: all 0.2s ease;
+  outline: 2px solid transparent;
+  outline-offset: 0.2rem;
+}
+.wrapper-page .wrapper-input-recipe button.btn-actual {
+  font-family: inherit;
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s, box-shadow 0.2s;
+  min-width: 8rem;
+  min-height: 3.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  outline: 2px solid transparent;
+  outline-offset: 0.2rem;
+  color: white;
+  border: none;
+}
+.wrapper-page .wrapper-input-recipe button.btn-actual:hover {
+  outline: 2px solid #5F9EA0;
+}
+.wrapper-page .wrapper-input-recipe button.btn-actual:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
