@@ -89,6 +89,53 @@ export async function fetchRecipesPaginated(
     }
 }
 
+export async function fetchRecipesListPaginated(
+    tag: string | null = null,
+    limit: number = 10,
+    lastPK: string = "",
+    lastSK: string = "" 
+): Promise<PaginatedRecipes | undefined> {
+    
+    const fetchAll = tag === null || tag === "";
+
+    if (!fetchAll && !tag) {
+        console.error("Either a tag must be provided, or tag must be explicitly null/empty to fetch all.");
+        return undefined;
+    }
+    
+    try {
+        let url = `${apiUrl}/recipe?limit=${limit}`;
+
+        if (fetchAll) {
+            url += `&all=true`;
+        } else {
+            url += `&tag=${tag}`;
+        }
+        
+        if (lastPK) {
+            url += `&lastPK=${lastPK}`;
+        }
+        if (lastSK) {
+            url += `&lastSK=${lastSK}`;
+        }
+        
+        const response = await fetch(url, {
+            headers: mergeHeaders(), 
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch recipes: ${response.status} ${response.statusText}`);
+        }
+
+        const data: PaginatedRecipes = await response.json(); 
+        
+        return data;
+    } catch (error) {
+        console.error(error);
+        return undefined;
+    }
+}
+
 export async function getRecipeById(id: string): Promise<Recipe | undefined> {
     try {
         const response = await fetch(`${apiUrl}/recipe/${id}`, {

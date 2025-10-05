@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { createAccount, SigninAccount, type Account } from "../Utils/api"; 
@@ -38,6 +38,13 @@ export default function AuthPage() {
     const [mode, setMode] = useState<AuthMode>('signIn');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // --- useEffect for Scrolling to Top ---
+    useEffect(() => {
+        // Scrolls the window to the top (0, 0)
+        window.scrollTo(0, 0);
+    }, [mode]); // Dependency array: runs on initial mount AND whenever 'mode' changes
+
+    // --- Validation and Handlers (Logic remains unchanged) ---
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordPattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,}$/;
 
@@ -116,6 +123,7 @@ export default function AuthPage() {
         }
     };
     
+    // Logic for toggling mode remains the same, but the useEffect hook handles the scroll
     const toggleMode = () => {
         setFormData({ username: '', password: '', confirmPassword: '' });
         setErrors({});
@@ -265,7 +273,7 @@ export default function AuthPage() {
             <h3 onClick={toggleMode} style={{ cursor: 'pointer' }}>
                 {switchText} 
                 &nbsp;&nbsp;
-                <i>  {switchLinkText}</i>
+                <i> 	{switchLinkText}</i>
             </h3>
         </div>
     );

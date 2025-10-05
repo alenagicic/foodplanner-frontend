@@ -1,4 +1,4 @@
-import { useState, type FormEvent, type ChangeEvent, type KeyboardEvent, useRef } from 'react';
+import { useState, type FormEvent, type ChangeEvent, type KeyboardEvent, useRef, useEffect } from 'react';
 import { createRecipe, getPresignedUploadUrl, uploadFileToS3 } from '../Utils/api';
 import type { Recipe } from '../Utils/api';
 import TiptapEditor from '../Component/TiptapEditor';
@@ -14,6 +14,12 @@ export default function AddPage() {
 
     const uploadButtonRef = useRef<HTMLButtonElement | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const titleInputRef = useRef<HTMLInputElement | null>(null);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+        titleInputRef.current?.focus();
+    }, []);
 
     const triggerFileInput = () => {
         if (fileInputRef.current) {
@@ -134,9 +140,9 @@ export default function AddPage() {
         
         images.forEach(file => {
              try {
-                const url = URL.createObjectURL(file);
-                URL.revokeObjectURL(url);
-            } catch (e) { /* ignore */ }
+                 const url = URL.createObjectURL(file);
+                 URL.revokeObjectURL(url);
+             } catch (e) { /* ignore */ }
         });
         
         setImages([]);
@@ -180,7 +186,7 @@ export default function AddPage() {
     return (
         <div className="wrapper-page">
 
-            <h2 className='heading-create-recipe'>Skapa recept</h2>  
+            <h2 className='heading-create-recipe'>Skapa recept</h2> 	
 
             <form className="wrapper-input-recipe" onSubmit={handleSubmit}>
                 
@@ -197,6 +203,7 @@ export default function AddPage() {
                     required
                     tabIndex={1}
                     spellCheck="false"
+                    ref={titleInputRef}
                 />
                 
                 <label className="recipe-label">Recept</label>

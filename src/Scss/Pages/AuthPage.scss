@@ -36,13 +36,16 @@
         align-items: center;
         column-gap: 0.2rem;
         margin-top: 1rem;
+        font-size: 1.2rem;
 
         i{
             text-decoration: underline;
+            font-style: normal;
         }
 
         i:hover{
             cursor: pointer;
+            color: #5F9EA0;
         }
     }
 
