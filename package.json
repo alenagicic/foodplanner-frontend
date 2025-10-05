@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://www.matabas.se",
+  "homepage": "https://https://alenagicic.github.io/matabas-frontend/",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
