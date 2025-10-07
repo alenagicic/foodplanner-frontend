@@ -1,5 +1,5 @@
-const apiUrl = "https://tz3pn4zgw3.execute-api.eu-north-1.amazonaws.com/Prod";
-const API_KEY = "QCr4kYzIGLm7eltMeRSN6VMWm8hFxjl9wKW4iDag"; 
+const apiUrl = "https://d254xvzh94.execute-api.eu-north-1.amazonaws.com/Prod";
+const API_KEY = "HMyBowoOLe2pEG5CWZAoa5ExQcgD7fds3GvzxuYl"; 
 
 export interface Recipe {
     id: string;

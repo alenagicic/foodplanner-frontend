@@ -1,4 +1,4 @@
-import React, { type RefObject, type KeyboardEvent } from 'react';
+import React, { type KeyboardEvent } from 'react';
 import { useEditor, EditorContent, Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
@@ -56,7 +56,7 @@ const TiptapToolbar: React.FC<TiptapToolbarProps> = ({ editor }) => {
 interface TiptapEditorProps {
     content: string;
     onContentChange: (htmlContent: string) => void;
-    nextElementRef: RefObject<HTMLElement> | null; 
+    nextElementRef?: React.RefObject<HTMLElement | null>;
 }
 
 export default function TiptapEditor({ content, onContentChange, nextElementRef }: TiptapEditorProps) {

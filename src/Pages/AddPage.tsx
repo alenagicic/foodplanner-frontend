@@ -12,14 +12,20 @@ export default function AddPage() {
     const [images, setImages] = useState<File[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const titleInputRef = useRef<HTMLInputElement | null>(null);
+    const tagInputRef = useRef<HTMLInputElement | null>(null);
     const uploadButtonRef = useRef<HTMLButtonElement | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
-    const titleInputRef = useRef<HTMLInputElement | null>(null);
+    const submitButtonRef = useRef<HTMLButtonElement | null>(null);
 
     useEffect(() => {
         window.scrollTo(0, 0);
         titleInputRef.current?.focus();
     }, []);
+
+    const handleInputFocus = (e: React.FocusEvent<HTMLInputElement | HTMLButtonElement>) => {
+        e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
 
     const triggerFileInput = () => {
         if (fileInputRef.current) {
@@ -186,7 +192,7 @@ export default function AddPage() {
     return (
         <div className="wrapper-page">
 
-            <h2 className='heading-create-recipe'>Skapa recept</h2> 	
+            <h2 className='heading-create-recipe'>Skapa recept</h2>     
 
             <form className="wrapper-input-recipe" onSubmit={handleSubmit}>
                 
@@ -198,6 +204,7 @@ export default function AddPage() {
                     type="text"
                     value={recipeTitle}
                     onChange={handleTitleChange}
+                    onFocus={handleInputFocus}
                     className="recipe-title-input"
                     maxLength={100} 
                     required
@@ -210,7 +217,7 @@ export default function AddPage() {
                 <TiptapEditor
                     content={recipeBody}
                     onContentChange={handleContentChange}
-                    nextElementRef={null}
+                    nextElementRef={tagInputRef} 
                 />
 
                 <label htmlFor="tag-input" className="tag-label">
@@ -230,9 +237,11 @@ export default function AddPage() {
                     value={currentTag}
                     onChange={handleTagInputChange}
                     onKeyDown={handleTagKeyDown}
+                    onFocus={handleInputFocus}
                     className="tag-input"
                     tabIndex={2}
                     spellCheck="false"
+                    ref={tagInputRef}
                 />
                 <div className="tag-list">{renderTagPills()}</div>
 
@@ -241,8 +250,9 @@ export default function AddPage() {
                     type="button" 
                     className="upload-image-btn" 
                     onClick={triggerFileInput}
+                    onFocus={handleInputFocus}
                     ref={uploadButtonRef}
-                    tabIndex={3} 
+                    tabIndex={3} // Ändrat från 3 till 4
                 >
                     Ladda upp
                 </button>
@@ -253,11 +263,19 @@ export default function AddPage() {
                     ref={fileInputRef}
                     onChange={handleImageChange}
                     style={{ display: 'none' }}
+                    tabIndex={-1} // Gömda input-fält ska inte ha en tabIndex > 0
                 />
 
                 <div className="image-preview-list">{renderImagePreviews()}</div>
 
-                <button type="submit" className="btn-actual" disabled={isSubmitting} tabIndex={4}>
+                <button 
+                    type="submit" 
+                    className="btn-actual" 
+                    disabled={isSubmitting} 
+                    tabIndex={4} // Ändrat från 5 till 5
+                    onFocus={handleInputFocus}
+                    ref={submitButtonRef}
+                >
                     {isSubmitting ? 'Laddar upp..' : 'Bearbeta'}
                 </button>
             </form>

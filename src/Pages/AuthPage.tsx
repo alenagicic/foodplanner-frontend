@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { createAccount, SigninAccount, type Account } from "../Utils/api"; 
@@ -38,11 +38,20 @@ export default function AuthPage() {
     const [mode, setMode] = useState<AuthMode>('signIn');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // --- useEffect for Scrolling to Top ---
+    const inputRefs = {
+        username: useRef<HTMLInputElement>(null),
+        password: useRef<HTMLInputElement>(null),
+        confirmPassword: useRef<HTMLInputElement>(null),
+    };
+
     useEffect(() => {
-        // Scrolls the window to the top (0, 0)
         window.scrollTo(0, 0);
-    }, [mode]); // Dependency array: runs on initial mount AND whenever 'mode' changes
+    }, [mode]); 
+
+    // --- New handler for focusing and scrolling on input focus ---
+    const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+        e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
 
     // --- Validation and Handlers (Logic remains unchanged) ---
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -123,7 +132,6 @@ export default function AuthPage() {
         }
     };
     
-    // Logic for toggling mode remains the same, but the useEffect hook handles the scroll
     const toggleMode = () => {
         setFormData({ username: '', password: '', confirmPassword: '' });
         setErrors({});
@@ -221,12 +229,14 @@ export default function AuthPage() {
                 <div>
                     <label htmlFor="username">E-post</label>
                     <input 
+                        ref={inputRefs.username}
                         name="username"
                         id="username"
                         placeholder="matabas@gmail.se" 
                         type="text" 
                         value={formData.username}
                         onChange={handleChange}
+                        onFocus={handleInputFocus}
                         required
                         disabled={isSubmitting}
                     />
@@ -236,12 +246,14 @@ export default function AuthPage() {
                 <div>
                     <label htmlFor="password">Lösenord</label>
                     <input 
+                        ref={inputRefs.password}
                         name="password"
                         id="password"
                         placeholder="Väldigtsäkertlösenord!*" 
                         type="password" 
                         value={formData.password}
                         onChange={handleChange}
+                        onFocus={handleInputFocus}
                         required
                         disabled={isSubmitting}
                     />
@@ -252,12 +264,14 @@ export default function AuthPage() {
                     <div>
                         <label htmlFor="confirmPassword">Bekräfta Lösenord</label>
                         <input 
+                            ref={inputRefs.confirmPassword}
                             name="confirmPassword"
                             id="confirmPassword"
                             placeholder="Väldigtsäkertlösenord!*" 
                             type="password" 
                             value={formData.confirmPassword || ''}
                             onChange={handleChange}
+                            onFocus={handleInputFocus}
                             required
                             disabled={isSubmitting}
                         />
@@ -273,7 +287,7 @@ export default function AuthPage() {
             <h3 onClick={toggleMode} style={{ cursor: 'pointer' }}>
                 {switchText} 
                 &nbsp;&nbsp;
-                <i> 	{switchLinkText}</i>
+                <i>    {switchLinkText}</i>
             </h3>
         </div>
     );

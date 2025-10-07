@@ -1,10 +1,13 @@
-
 export default function Header() {
+
+  const reload = () => {
+    window.location.href = window.location.origin;
+  }
 
   return (
     <header className="d-flex align-items-center justify-content-between p-3 bg-light shadow-sm">
       
-      <div className='wrapper-svg-header'>
+      <div onClick={reload} className='wrapper-svg-header'>
         <svg
           version="1.1"
           id="Layer_1"
