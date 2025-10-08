@@ -19,12 +19,20 @@ export default function FloatingNavbar() {
 
 
       {/* Create */}
-      <button className="nav-item" data-label="Skapa" onClick={() => navigate('/add')}>
+      <button className="nav-item" data-label="Skapa"
+        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+          e.currentTarget.blur();
+          navigate('/add');
+      }}>
         <i className="bi bi-plus-circle fs-3"></i>
       </button>
 
       {/* Browse */}
-      <button className="nav-item" data-label="Bläddra" onClick={() => navigate('/')}>
+      <button className="nav-item" data-label="Bläddra"
+        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+          e.currentTarget.blur();
+          navigate('/');
+      }}>
         <i className="bi bi-search fs-3"></i>
       </button>
 
