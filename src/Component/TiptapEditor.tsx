@@ -80,9 +80,6 @@ export default function TiptapEditor({ content, onContentChange, nextElementRef 
     const editor = useEditor({
         extensions: [
             StarterKit.configure({}),
-            Placeholder.configure({
-                placeholder: 'Skriv ditt recept här...',
-            }),
         ],
         content: content,
         onUpdate: ({ editor }) => {

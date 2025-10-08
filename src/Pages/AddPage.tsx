@@ -125,7 +125,7 @@ export default function AddPage() {
             const created = await createRecipe(newRecipe);
 
             if (created) {
-                alert('Receptet laddades upp! 🎉');
+                alert('Receptet laddades upp!');
                 resetForm();
             } else {
                 throw new Error('Failed to create recipe.');

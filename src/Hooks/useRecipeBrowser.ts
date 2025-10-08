@@ -103,7 +103,7 @@ export const useRecipeBrowser = () => {
 
         const trimmedTag = searchTag.trim().toLowerCase();
 
-        if (trimmedTag === currentSearchTerm && recipes.length > 0) return; // Prevent re-search if already loaded
+        if (trimmedTag === currentSearchTerm) return; // Prevent re-search if already loaded
 
         // 1. Reset state
         setRecipes([]);
