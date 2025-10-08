@@ -30,10 +30,8 @@
     border-radius: 8px;
     overflow: hidden;
     cursor: pointer;
-    padding-bottom: 2rem;
 
     &.no-image-mode {
-      padding-bottom: 1rem;
 
       .recipe-card__content {
         margin-top: 0;
@@ -67,6 +65,12 @@
       justify-content: center;
       height: auto;
       margin-top: 1rem;
+
+      .create-recipe-card{
+        display: flex;
+        column-gap: 0.5rem;
+        margin-top: 1rem;
+      }
 
       .recipe-card__tags {
         display: flex;
@@ -160,6 +164,7 @@
     max-height: 400px;
     object-fit: cover;
     border-radius: 4px;
+    
   }
 }
 
@@ -196,6 +201,17 @@
     font-size: 1rem;
     text-transform: capitalize;
   }
+}
+
+.tag-pill-detail {
+    padding: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background-color: #5f9ea0;
+    color: whitesmoke;
+    border-radius: 15px;
+    font-size: 1rem;
+    text-transform: capitalize;
 }
 
 .modal-thumbnail-grid {

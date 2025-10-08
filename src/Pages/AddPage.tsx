@@ -228,7 +228,7 @@ export default function AddPage() {
                             <line x1="12" y1="16" x2="12" y2="12" />
                             <line x1="12" y1="8" x2="12.01" y2="8" />
                         </svg>
-                        <span className="tooltip-text">Taggarna är till för filtrering</span>
+                        <span className="tooltip-text">Taggarna är till för filtrering. <br /> Tryck enter för att lägga till.</span>
                     </span>
                 </label>
                 <input

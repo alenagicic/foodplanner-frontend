@@ -377,20 +377,91 @@ export async function getPresignedUploadUrl(
     }
 }
 
+// export async function uploadFileToS3(uploadUrl: string, file: File): Promise<boolean> {
+//     try {
+//         const response = await fetch(uploadUrl, {
+//             method: 'PUT',
+//             headers: {
+//                 'Content-Type': file.type, 
+//             },
+//             body: file,
+//         });
+//         return response.ok;
+//     } catch (error) {
+//         console.error('Failed to upload to S3:', error);
+//         return false;
+//     }
+// }
+
 export async function uploadFileToS3(uploadUrl: string, file: File): Promise<boolean> {
     try {
+        let fileToUpload = file;
+        
+        if (file.type.startsWith('image/')) {
+            fileToUpload = await compressImage(file, 0.75); 
+        }
+
         const response = await fetch(uploadUrl, {
             method: 'PUT',
             headers: {
-                'Content-Type': file.type, 
+                'Content-Type': fileToUpload.type, 
             },
-            body: file,
+            body: fileToUpload,
         });
+
         return response.ok;
     } catch (error) {
         console.error('Failed to upload to S3:', error);
         return false;
     }
+}
+
+function compressImage(file: File, quality: number = 0.8): Promise<File> {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                
+                let width = img.width;
+                let height = img.height;
+                const MAX_WIDTH = 1200; 
+
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return reject(new Error("Kunde inte hämta canvas-kontext."));
+                
+                ctx.drawImage(img, 0, 0, width, height);
+
+                canvas.toBlob((blob) => {
+                    if (blob) {
+                        const compressedFile = new File([blob], file.name, {
+                            type: file.type === "image/png" ? "image/png" : "image/jpeg",
+                            lastModified: Date.now(),
+                        });
+                        resolve(compressedFile);
+                    } else {
+                        reject(new Error("Bildkomprimering misslyckades."));
+                    }
+                }, 
+                file.type === "image/png" ? "image/png" : "image/jpeg",
+                quality);
+            };
+            img.onerror = reject;
+            img.src = event.target?.result as string;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
 }
 
 /* BEAUTIFY */

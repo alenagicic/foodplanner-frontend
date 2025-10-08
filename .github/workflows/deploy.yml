@@ -1,0 +1,53 @@
+name: Deploy Static Site to S3
+
+on:
+  push:
+    branches:
+      - main  # Only runs on pushes to the 'main' branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read 
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ----------------------------------------------------------------------
+      # 1. Build Step (Prepares the 'dist/' directory)
+      # ----------------------------------------------------------------------
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies and build
+        run: |
+          npm install
+          npm run build
+        # This assumes 'npm run build' outputs your static files to the 'dist/' folder
+
+      # ----------------------------------------------------------------------
+      # 2. AWS Authentication (Using GitHub Secrets)
+      # ----------------------------------------------------------------------
+      - name: Configure AWS Credentials using Access Keys
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} # Uses Secret 1
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # Uses Secret 2
+          aws-region: eu-north-1 # <-- !! Set your specific AWS region here !!
+
+      # ----------------------------------------------------------------------
+      # 3. Deployment to S3 (Syncs 'dist/' to the S3 bucket)
+      # ----------------------------------------------------------------------
+      - name: Deploy to S3
+        run: |
+          echo "Starting synchronization of 'dist/' to S3://${{ secrets.S3_BUCKET_NAME }}"
+          
+          # 'aws s3 sync' command:
+          # 1. Copies new/changed files from local 'dist/' to S3.
+          # 2. '--delete' removes files from S3 that are no longer in 'dist/'.
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }} --delete

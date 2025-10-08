@@ -11,6 +11,7 @@ interface PaginatedRecipes {
 
 const PAGE_SIZE = 10;
 
+// Utility to format date string to 'day shortMonth year' in Swedish locale
 const formatDate = (dateString: string) => {
     try {
         const date = new Date(dateString);
@@ -24,14 +25,17 @@ const formatDate = (dateString: string) => {
     }
 };
 
+// Utility to get a card title, falling back to a truncated ID if the title is empty
 const getCardTitle = (recipe: Recipe) => {
     return recipe.title.trim() || `Recept #${recipe.id.slice(0, 8)}`;
 };
 
+// Utility to get the main image URL, falling back to a default image
 const getCardImageUrl = (recipe: Recipe) => {
     return recipe.imageUrls?.[0] || img;
 };
 
+// Utility to get the tags, defaulting to an empty array
 const getCardTags = (recipe: Recipe) => {
     return recipe.tag || [];
 };
@@ -41,6 +45,7 @@ interface TagRendererProps {
     className: string;
 }
 
+// Component for rendering recipe tags
 const TagRenderer = ({ tags, className }: TagRendererProps) => {
     const tagList = tags || [];
     if (tagList.length === 0) {
@@ -65,13 +70,22 @@ interface RecipeModalProps {
     handleThumbnailClick: (url: string) => void;
 }
 
+// Modal component to display full recipe details
 const RecipeModal = ({ recipe, mainImageUrl, closeModal, handleThumbnailClick }: RecipeModalProps) => {
     const { title, imageUrls, tag, bodyrecipe, created } = recipe;
+
+    // Effect to control scrolling when the modal is open
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, []);
 
     return (
         <div className="modal-overlay" onClick={closeModal}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                <button className="modal-close-btn" onClick={closeModal}>
+                <button className="modal-close-btn" onClick={closeModal} aria-label="Stäng modal">
                     &times;
                 </button>
 
@@ -79,7 +93,7 @@ const RecipeModal = ({ recipe, mainImageUrl, closeModal, handleThumbnailClick }:
 
                 <div className="modal-image-gallery">
                     <div className="modal-image-container">
-                        <img src={mainImageUrl} alt={title} className="modal-image" />
+                        <img src={mainImageUrl} alt={`Huvudbild för ${title}`} className="modal-image" loading="lazy" />
                     </div>
 
                     {imageUrls && imageUrls.length > 1 && (
@@ -90,9 +104,10 @@ const RecipeModal = ({ recipe, mainImageUrl, closeModal, handleThumbnailClick }:
                                     <img
                                         key={index}
                                         src={url}
-                                        alt={`${title} bild ${index + 1}`}
+                                        alt={`${title} miniatyrbild ${index + 1}`}
                                         className={`modal-thumbnail ${url === mainImageUrl ? 'is-active' : ''}`}
                                         onClick={() => handleThumbnailClick(url)}
+                                        loading="lazy"
                                     />
                                 ))}
                             </div>
@@ -110,7 +125,7 @@ const RecipeModal = ({ recipe, mainImageUrl, closeModal, handleThumbnailClick }:
                     <TagRenderer tags={tag} className="tag-list" />
                 </div>
 
-                <div className="modal-section">
+                <div className="modal-section modal-recipe-body">
                     <h3>Recept</h3>
                     <div
                         className="modal-bodyrecipe"
@@ -122,6 +137,7 @@ const RecipeModal = ({ recipe, mainImageUrl, closeModal, handleThumbnailClick }:
     );
 };
 
+// Main component for browsing recipes
 export default function Browsepage() {
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [loading, setLoading] = useState(false);
@@ -137,6 +153,7 @@ export default function Browsepage() {
     const [currentModalImageUrl, setCurrentModalImageUrl] = useState<string>('');
     const [showImages, setShowImages] = useState(true);
 
+    // Function to fetch a page of recipes, memoized
     const fetchPage = useCallback(async (
         tag: string,
         limit: number,
@@ -146,6 +163,8 @@ export default function Browsepage() {
     ) => {
         if (loading || (!isInitial && !hasMore)) return;
 
+        console.log("fetched")
+        
         setLoading(true);
 
         const data: PaginatedRecipes | undefined = await fetchRecipesListPaginated(
@@ -170,14 +189,16 @@ export default function Browsepage() {
         setLoading(false);
     }, [loading, hasMore]);
 
+    // Initial load and dependency on search term change
     useEffect(() => {
-        if (recipes.length === 0 && hasMore) {
+        // Only fetch if it's the initial load for the current search term and there might be more results
+        if (recipes.length === 0 && hasMore && !loading) {
             const tagToFetch = currentSearchTerm;
             fetchPage(tagToFetch, PAGE_SIZE, null, null, true);
         }
-    }, [currentSearchTerm, hasMore, recipes.length, fetchPage]);
+    }, [currentSearchTerm, hasMore, recipes.length, fetchPage, loading]);
 
-
+    // Handler for the search form submission
     const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
@@ -185,6 +206,7 @@ export default function Browsepage() {
 
         if (trimmedTag === currentSearchTerm) return;
 
+        // Reset state for a new search
         setRecipes([]);
         setNextPK(null);
         setNextSK(null);
@@ -193,31 +215,36 @@ export default function Browsepage() {
         setCurrentSearchTerm(trimmedTag);
     };
 
+    // Handler for the 'Load More' button
     const handleLoadMore = () => {
         if (!hasMore || loading || !nextPK || !nextSK) return;
 
         fetchPage(currentSearchTerm, PAGE_SIZE, nextPK, nextSK, false);
     };
 
+    // Toggles the display of images on recipe cards
     const toggleImageDisplay = () => {
         setShowImages(prev => !prev);
     };
 
+    // Opens the recipe modal
     const openModal = (recipe: Recipe) => {
         setSelectedRecipe(recipe);
         setCurrentModalImageUrl(getCardImageUrl(recipe));
     };
 
+    // Closes the recipe modal
     const closeModal = () => {
         setSelectedRecipe(null);
         setCurrentModalImageUrl('');
     };
 
+    // Handles clicking on a thumbnail inside the modal
     const handleThumbnailClick = (imageUrl: string) => {
         setCurrentModalImageUrl(imageUrl);
     };
 
-
+    // Renders the message when no recipes are found
     const renderEmptyState = () => {
         if (!hasMore && !loading && recipes.length === 0) {
             if (currentSearchTerm) {
@@ -238,7 +265,6 @@ export default function Browsepage() {
         return null;
     };
 
-
     return (
         <div className="wrapper-page wrapper-browse">
             <h2>Sök kategori</h2>
@@ -250,6 +276,7 @@ export default function Browsepage() {
                     value={searchTag}
                     onChange={(e) => setSearchTag(e.target.value)}
                     className="search-input"
+                    aria-label="Sök efter receptkategori"
                 />
                 <button type="submit" className="btn-actual btn-search" disabled={loading}>
                     Sök
@@ -257,7 +284,7 @@ export default function Browsepage() {
             </form>
 
             {recipes.length > 0 && (
-                <button className="btn-toggle-images btn-actual" onClick={toggleImageDisplay}>
+                <button className="btn-toggle-images btn-actual" onClick={toggleImageDisplay} aria-pressed={!showImages}>
                     {showImages ? 'Dölj bilder' : 'Visa bilder'}
                 </button>
             )}
@@ -276,6 +303,11 @@ export default function Browsepage() {
                         onClick={() => openModal(recipe)}
                         role="button"
                         tabIndex={0}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                openModal(recipe);
+                            }
+                        }}
                     >
                         {showImages && (
                             <div className="recipe-card__image-container">
@@ -283,6 +315,7 @@ export default function Browsepage() {
                                     src={getCardImageUrl(recipe)}
                                     alt={getCardTitle(recipe)}
                                     className="recipe-card__image"
+                                    loading="lazy"
                                 />
                             </div>
                         )}
@@ -290,18 +323,21 @@ export default function Browsepage() {
                         <div className="recipe-card__content">
                             <h3 className="recipe-card__title">{getCardTitle(recipe)}</h3>
 
-                            <h4>Skapad</h4>
-                            <p className="recipe-card__created-date">{formatDate(recipe.created)}</p>
-
                             <h4>Kategori</h4>
                             <TagRenderer tags={getCardTags(recipe)} className="recipe-card__tags" />
+
+                            <div className="create-recipe-card">
+                                <h4>Skapad:</h4>
+                                <p className="recipe-card__created-date">{formatDate(recipe.created)}</p>
+                            </div>
+
                         </div>
                     </div>
                 ))}
             </div>
 
             {recipes.length > 0 && hasMore && (
-                <button className="btn-actual btn-browse" onClick={handleLoadMore} disabled={loading}>
+                <button className="btn-actual btn-browse" onClick={handleLoadMore} disabled={loading} aria-live="polite">
                     {loading ? 'Laddar fler...' : 'Ladda mera'}
                 </button>
             )}
