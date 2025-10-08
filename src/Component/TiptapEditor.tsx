@@ -1,7 +1,6 @@
 import React, { type KeyboardEvent, useState, useCallback } from 'react';
 import { useEditor, EditorContent, Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import Placeholder from '@tiptap/extension-placeholder';
 import IconPicker from './IconPicker'; // Assuming IconPicker is in the same directory or adjust path
 
 interface TiptapToolbarProps {
