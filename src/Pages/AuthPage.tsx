@@ -22,6 +22,10 @@ export default function AuthPage() {
     const context = useContext(AuthContext);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        inputRefs.username.current?.focus();
+    },[])
+
     if (!context) {
         throw new Error("AuthPage must be used within an AuthContext.Provider");
     }
@@ -214,7 +218,7 @@ export default function AuthPage() {
     const isSignIn = mode === 'signIn';
     const titleText = isSignIn ? "Logga in" : "Registrera dig";
     const buttonText = isSignIn ? (isSubmitting ? "Loggar in..." : "Logga in") : (isSubmitting ? "Skapar konto..." : "Skapa konto");
-    const switchText = isSignIn ? "Inget konto?" : "Har du redan ett konto?";
+    // const switchText = isSignIn ? "Inget konto?" : "Har du redan ett konto?";
     const switchLinkText = isSignIn ? "Klicka här för att registrera dig" : "Klicka här för att logga in";
 
     return (
@@ -232,7 +236,6 @@ export default function AuthPage() {
                         ref={inputRefs.username}
                         name="username"
                         id="username"
-                        placeholder="matabas@gmail.se" 
                         type="text" 
                         value={formData.username}
                         onChange={handleChange}
@@ -249,7 +252,6 @@ export default function AuthPage() {
                         ref={inputRefs.password}
                         name="password"
                         id="password"
-                        placeholder="Väldigtsäkertlösenord!*" 
                         type="password" 
                         value={formData.password}
                         onChange={handleChange}
@@ -267,7 +269,6 @@ export default function AuthPage() {
                             ref={inputRefs.confirmPassword}
                             name="confirmPassword"
                             id="confirmPassword"
-                            placeholder="Väldigtsäkertlösenord!*" 
                             type="password" 
                             value={formData.confirmPassword || ''}
                             onChange={handleChange}
@@ -285,9 +286,9 @@ export default function AuthPage() {
             </form>
 
             <h3 onClick={toggleMode} style={{ cursor: 'pointer' }}>
-                {switchText} 
-                &nbsp;&nbsp;
-                <i>    {switchLinkText}</i>
+                {/* {switchText}  */}
+                {/* &nbsp;&nbsp; */}
+                <i>{switchLinkText}</i>
             </h3>
         </div>
     );

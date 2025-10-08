@@ -1,5 +1,5 @@
-const apiUrl = "https://7v8xv2qmq1.execute-api.eu-north-1.amazonaws.com/Prod";
-const API_KEY = "ehk4yGG1so515We1Xtw1j48AlruXBXJ23D8oOqVo"; 
+const apiUrl = "https://a0rrvbt35k.execute-api.eu-north-1.amazonaws.com/Prod";
+const API_KEY = "mYGfM1kFHk4t1RCPHjdGy3WgU1njrzwb50IrKKt4"; 
 
 export interface Recipe {
     id: string;
@@ -88,53 +88,6 @@ export async function fetchRecipesPaginated(
         return undefined;
     }
 }
-
-// export async function fetchRecipesListPaginated(
-//     tag: string | null = null,
-//     limit: number = 10,
-//     lastPK: string = "",
-//     lastSK: string = "" 
-// ): Promise<PaginatedRecipes | undefined> {
-    
-//     const fetchAll = tag === null || tag === "";
-
-//     if (!fetchAll && !tag) {
-//         console.error("Either a tag must be provided, or tag must be explicitly null/empty to fetch all.");
-//         return undefined;
-//     }
-    
-//     try {
-//         let url = `${apiUrl}/recipe?limit=${limit}`;
-
-//         if (fetchAll) {
-//             url += `&all=true`;
-//         } else {
-//             url += `&tag=${tag}`;
-//         }
-        
-//         if (lastPK) {
-//             url += `&lastPK=${lastPK}`;
-//         }
-//         if (lastSK) {
-//             url += `&lastSK=${lastSK}`;
-//         }
-        
-//         const response = await fetch(url, {
-//             headers: mergeHeaders(), 
-//         });
-
-//         if (!response.ok) {
-//             throw new Error(`Failed to fetch recipes: ${response.status} ${response.statusText}`);
-//         }
-
-//         const data: PaginatedRecipes = await response.json(); 
-        
-//         return data;
-//     } catch (error) {
-//         console.error(error);
-//         return undefined;
-//     }
-// }
 
 export async function fetchRecipesListPaginated(
     tag: string | null = null,
@@ -377,22 +330,6 @@ export async function getPresignedUploadUrl(
     }
 }
 
-// export async function uploadFileToS3(uploadUrl: string, file: File): Promise<boolean> {
-//     try {
-//         const response = await fetch(uploadUrl, {
-//             method: 'PUT',
-//             headers: {
-//                 'Content-Type': file.type, 
-//             },
-//             body: file,
-//         });
-//         return response.ok;
-//     } catch (error) {
-//         console.error('Failed to upload to S3:', error);
-//         return false;
-//     }
-// }
-
 export async function uploadFileToS3(uploadUrl: string, file: File): Promise<boolean> {
     try {
         let fileToUpload = file;
@@ -495,4 +432,52 @@ export async function Beautify(data: string): Promise<string> {
         return "";
     }
 
+}
+
+/* SUGGESTION */
+export async function TagSuggestions(tagPrefix: string, signal?: AbortSignal): Promise<string[]> {
+    
+    if (!tagPrefix || tagPrefix.trim() === "") {
+        return [];
+    }
+
+    const decodedPrefix = encodeURIComponent(tagPrefix);
+    
+    const fullUrl = `${apiUrl}/tag/suggestions?prefix=${decodedPrefix}`;
+
+    console.log("fetched tag")
+
+    try {
+        const response = await fetch(fullUrl, {
+            method: 'GET',
+            headers: mergeHeaders(),
+            signal: signal, 
+        });
+
+        if (!response.ok) {
+            if (signal?.aborted) {
+                const abortError = new Error("Request aborted");
+                abortError.name = 'AbortError';
+                throw abortError;
+            }
+            
+            const errorData = await response.json();
+            console.log(response)
+            console.error('API Error during tag suggestion fetch:', errorData);
+            throw new Error(`Failed to fetch suggestions: ${response.status} - ${errorData.message || response.statusText}`);
+        }
+
+        const data = await response.json();
+        
+        const suggestions: string[] = data.suggestions || [];
+        return suggestions;
+
+    } catch (error) {
+        if (error instanceof Error && error.name === 'AbortError') {
+            throw error;
+        }
+        
+        console.error("Error in TagSuggestions network call:", error);
+        return []; 
+    }
 }
