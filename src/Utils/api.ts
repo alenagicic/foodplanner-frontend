@@ -2,7 +2,7 @@ const apiUrl = "https://a0rrvbt35k.execute-api.eu-north-1.amazonaws.com/Prod";
 const API_KEY = "mYGfM1kFHk4t1RCPHjdGy3WgU1njrzwb50IrKKt4"; 
 
 export interface Recipe {
-    id: string;
+    Id: string;
     title: string;
     bodyrecipe: string;
     tag?: string[]; 
@@ -479,5 +479,33 @@ export async function TagSuggestions(tagPrefix: string, signal?: AbortSignal): P
         
         console.error("Error in TagSuggestions network call:", error);
         return []; 
+    }
+}
+
+/* REMOVE ARTICLE */
+
+export async function removeArticle(id: string): Promise<string | undefined> {
+    try {
+        console.log(id)
+        const response = await fetch(`${apiUrl}/recipe/${id}`, {
+            method: 'DELETE',
+            headers: mergeHeaders(),
+        });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`HTTP error! Status: ${response.status}. Body: ${errorText}`);
+            throw new Error(`Account creation failed. Status: ${response.status}`);
+        }
+
+        const res = await response.json();
+
+        console.log(res)
+
+        return "ok";
+        
+    } catch (error) {
+        console.error('Failed to create account:', error);
+        return undefined;
     }
 }

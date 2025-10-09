@@ -1,5 +1,5 @@
 import type { Recipe } from "../Utils/api";
-import { TagSuggestions } from "../Utils/api";
+import { TagSuggestions, removeArticle } from "../Utils/api";
 import { useRecipeBrowser, getCardTitle, getCardTags, getCardImageUrl } from "../Hooks/useRecipeBrowser";
 import { useEffect, useState } from "react";
 
@@ -59,7 +59,7 @@ const RecipeModal = ({ recipe, mainImageUrl, closeModal, handleThumbnailClick }:
         <div className="modal-overlay" onClick={closeModal}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <button className="modal-close-btn" onClick={closeModal} aria-label="Stäng modal">
-                    &times;
+                    Stäng
                 </button>
 
                 <h2 className="modal-title">{title}</h2>
@@ -109,6 +109,15 @@ const RecipeModal = ({ recipe, mainImageUrl, closeModal, handleThumbnailClick }:
         </div>
     );
 };
+
+const removeArticleNelement = async (articleId: string) => {
+    const res = await removeArticle(articleId)
+
+    if(res !== "" || undefined){
+        // Means success
+        console.log("article removed")
+    }
+}
 
 export default function Browsepage() {
     const {
@@ -237,7 +246,7 @@ export default function Browsepage() {
             <div className="recipe-grid">
                 {recipes.map((recipe) => (
                     <div
-                        key={recipe.id}
+                        key={recipe.Id}
                         className={`recipe-card ${!showImages ? 'no-image-mode' : ''}`}
                         onClick={() => openModal(recipe)}
                         role="button"
@@ -262,9 +271,20 @@ export default function Browsepage() {
                         <div className="recipe-card__content">
                             <h3 className="recipe-card__title">{getCardTitle(recipe)}</h3>
 
-                            <h4>Kategori</h4>
-                            <TagRenderer tags={getCardTags(recipe)} className="recipe-card__tags" />
+                            <button 
+                                onClick={(e) => {
+                                    e.stopPropagation(); 
+                                    removeArticleNelement(recipe.Id);
+                                }}
+                            >
+                                Ta bort
+                            </button>
 
+                            <div className="create-recipe-categories">
+                                <h4>Kategori:</h4>
+                                <TagRenderer tags={getCardTags(recipe)} className="recipe-card__tags" />
+                            </div>
+                        
                             <div className="create-recipe-card">
                                 <h4>Skapad:</h4>
                                 <p className="recipe-card__created-date">{formatDate(recipe.created)}</p>

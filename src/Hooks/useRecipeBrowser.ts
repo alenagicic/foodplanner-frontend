@@ -16,7 +16,7 @@ export const getCardImageUrl = (recipe: Recipe): string => {
 };
 
 export const getCardTitle = (recipe: Recipe): string => {
-    return recipe.title.trim() || `Recept #${recipe.id.slice(0, 8)}`;
+    return recipe.title.trim() || `Recept #${recipe.Id.slice(0, 8)}`;
 };
 
 export const getCardTags = (recipe: Recipe): string[] => {

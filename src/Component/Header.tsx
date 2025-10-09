@@ -5,9 +5,9 @@ export default function Header() {
   }
 
   return (
-    <header>
+    <header onClick={reload}>
       
-      <div onClick={reload} className='wrapper-svg-header'>
+      <div className='wrapper-svg-header'>
         <h2 className="header-great-vibes">
           Matabas.se
         </h2>

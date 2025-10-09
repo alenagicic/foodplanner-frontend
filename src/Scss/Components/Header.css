@@ -17,6 +17,7 @@ header {
   border-bottom: 1px solid #ddd;
   height: 6rem;
   z-index: 100;
+  cursor: pointer;
 }
 header .wrapper-svg-header {
   display: flex;
