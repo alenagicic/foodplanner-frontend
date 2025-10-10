@@ -63,9 +63,6 @@ export default function AddPage() {
 
     return (
         <div className="wrapper-page">
-
-            <h2 className='heading-create-recipe'>Skapa recept</h2>     
-
             <form className="wrapper-input-recipe" onSubmit={handleSubmit}>
                 
                 <label htmlFor="recipe-title-input" className="recipe-label">

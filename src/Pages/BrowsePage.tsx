@@ -105,6 +105,7 @@ const RecipeModal = ({ recipe, mainImageUrl, closeModal, handleThumbnailClick }:
                         dangerouslySetInnerHTML={{ __html: bodyrecipe }}
                     />
                 </div>
+                
             </div>
         </div>
     );
@@ -216,7 +217,6 @@ const Browsepage = () => {
 
     return (
         <div className="wrapper-page wrapper-browse">
-            <h2>Sök kategori</h2>
 
             <form onSubmit={handleSearch} className="search-form">
                 <input
@@ -281,18 +281,19 @@ const Browsepage = () => {
                         )}
 
                         <div className="recipe-card__content">
-                            <h3 className="recipe-card__title">{getCardTitle(recipe)}</h3>
+                            <h3 className="recipe-card-header">{getCardTitle(recipe)}</h3>
 
                             <button 
                                 onClick={(e) => onRemoveClick(e, recipe)}
                             >
                                 <i>Ta bort</i>
                             </button>
-
+                            
+                            {/* 
                             <div className="create-recipe-categories">
                                 <i className="bi bi-tags"></i>
                                 <TagRenderer tags={getCardTags(recipe)} className="recipe-card__tags" />
-                            </div>
+                            </div> */}
                         
                             <div className="create-recipe-card">
                                 <i className="bi bi-clock"></i>

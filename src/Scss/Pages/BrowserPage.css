@@ -29,14 +29,14 @@
   cursor: pointer;
   background-color: #F9FAFB;
 }
+.wrapper-browse .recipe-grid .recipe-card:hover .recipe-card-header {
+  text-decoration: underline;
+}
 .wrapper-browse .recipe-grid .recipe-card.no-image-mode .recipe-card__content {
   margin-top: 0;
 }
-.wrapper-browse .recipe-grid .recipe-card .recipe-card__title {
+.wrapper-browse .recipe-grid .recipe-card .recipe-card-header {
   width: 80%;
-}
-.wrapper-browse .recipe-grid .recipe-card:hover .recipe-card__title {
-  text-decoration: underline;
 }
 .wrapper-browse .recipe-grid .recipe-card__image-container {
   height: 25rem;
@@ -162,10 +162,11 @@
 }
 .modal-overlay .modal-content .modal-title {
   width: 85%;
+  font-size: 1.6rem;
 }
 .modal-overlay .modal-content .modal-close-btn {
   position: absolute;
-  top: 40px;
+  top: 35px;
   right: 40px;
   background: none;
   border: none;

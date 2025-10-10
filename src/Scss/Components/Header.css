@@ -28,10 +28,6 @@ header .wrapper-svg-header {
   margin-right: auto;
   border: 1px solid black;
 }
-header .wrapper-svg-header svg {
-  margin-bottom: 0.35rem;
-  display: none;
-}
 header h4 {
   margin: 0px;
   padding: 0px;

@@ -1,4 +1,5 @@
 .wrapper-browse {
+
   .search-form {
     display: flex;
     column-gap: 2rem;
@@ -33,20 +34,20 @@
       cursor: pointer;
       background-color: #F9FAFB;
 
+      &:hover{
+        .recipe-card-header{
+          text-decoration: underline;
+        }
+      }
+
       &.no-image-mode {
         .recipe-card__content {
           margin-top: 0;
         }
       }
 
-      .recipe-card__title{
+      .recipe-card-header{
         width: 80%;
-      }
-
-      &:hover {
-        .recipe-card__title {
-          text-decoration: underline;
-        }
       }
 
       &__image-container {
@@ -188,11 +189,12 @@
 
     .modal-title{
       width: 85%;
+      font-size: 1.6rem;
     }
 
     .modal-close-btn {
       position: absolute;
-      top: 40px;
+      top: 35px;
       right: 40px;
       background: none;
       border: none;
