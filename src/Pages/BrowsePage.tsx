@@ -289,11 +289,10 @@ const Browsepage = () => {
                                 <i>Ta bort</i>
                             </button>
                             
-                            {/* 
                             <div className="create-recipe-categories">
                                 <i className="bi bi-tags"></i>
                                 <TagRenderer tags={getCardTags(recipe)} className="recipe-card__tags" />
-                            </div> */}
+                            </div>
                         
                             <div className="create-recipe-card">
                                 <i className="bi bi-clock"></i>

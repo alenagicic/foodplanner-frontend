@@ -105,8 +105,13 @@
 .wrapper-browse .recipe-grid .recipe-card__content .create-recipe-categories .recipe-card__tags .tag-pill-detail {
   all: unset;
   text-transform: capitalize;
-  border-radius: 1rem;
-  font-weight: 600;
+  border-radius: 0.4rem;
+  font-weight: 500;
+  background-color: #ACE1AF;
+  color: #163832;
+  padding: 0.2rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 .wrapper-browse .recipe-grid .recipe-card__content .create-recipe-card {
   display: flex;
