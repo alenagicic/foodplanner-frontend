@@ -1,193 +1,65 @@
-import { useState, type FormEvent, type ChangeEvent, type KeyboardEvent, useRef, useEffect } from 'react';
-import { createRecipe, getPresignedUploadUrl, uploadFileToS3 } from '../Utils/api';
-import type { Recipe } from '../Utils/api';
+// Fil: AddPage.tsx
+
 import TiptapEditor from '../Component/TiptapEditor';
+import { useAddRecipeForm } from '../Hooks/useAddRecipeForm';
 
-export default function AddPage() {
-    const [recipeTitle, setRecipeTitle] = useState(''); 
-    
-    const [recipeBody, setRecipeBody] = useState(''); 
-    const [tagList, setTagList] = useState<string[]>([]);
-    const [currentTag, setCurrentTag] = useState('');
-    const [images, setImages] = useState<File[]>([]);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
-    const titleInputRef = useRef<HTMLInputElement | null>(null);
-    const tagInputRef = useRef<HTMLInputElement | null>(null);
-    const uploadButtonRef = useRef<HTMLButtonElement | null>(null);
-    const fileInputRef = useRef<HTMLInputElement | null>(null);
-    const submitButtonRef = useRef<HTMLButtonElement | null>(null);
-
-    useEffect(() => {
-        window.scrollTo(0, 0);
-        titleInputRef.current?.focus();
-    }, []);
-
-    const handleInputFocus = (e: React.FocusEvent<HTMLInputElement | HTMLButtonElement>) => {
-        e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    };
-
-    const triggerFileInput = () => {
-        if (fileInputRef.current) {
-            fileInputRef.current.click();
-        }
-    };
-    
-    const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setRecipeTitle(e.target.value);
-    };
-
-    const handleContentChange = (htmlContent: string) => {
-        setRecipeBody(htmlContent);
-    };
-    
-    const handleTagInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setCurrentTag(e.target.value);
-    };
-
-    const handleTagKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && currentTag.trim() !== '') {
-            e.preventDefault();
-            const newTag = currentTag.trim().toLowerCase();
-            if (!tagList.includes(newTag)) {
-                setTagList(prev => [...prev, newTag]);
-            }
-            setCurrentTag('');
-        }
-    };
-
-    const removeTag = (tagToRemove: string) => {
-        setTagList(prev => prev.filter(tag => tag !== tagToRemove));
-    };
-
-    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            const selected = Array.from(e.target.files);
-            setImages(prev => [...prev, ...selected]);
-        }
-    };
-
-    const removeImage = (index: number) => {
-        setImages(prev => prev.filter((file, i) => {
-            if (i === index) {
-                try {
-                    const url = URL.createObjectURL(file);
-                    URL.revokeObjectURL(url);
-                } catch (e) {
-                }
-                return false;
-            }
-            return true;
-        }));
-    };
-
-    const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault();
-
-        if (!recipeTitle.trim()) {
-            alert('Vänligen skriv in en rubrik för receptet.');
-            return;
-        }
+const renderImagePreviews = (images: File[], removeImage: (index: number) => void) =>
+    images.map((img, index) => {
+        const url = URL.createObjectURL(img);
         
-        const isBodyEmpty = !recipeBody.trim() || recipeBody === '<p></p>';
-        if (isBodyEmpty) {
-            alert('Vänligen skriv in ett recept.');
-            return;
-        }
-
-        setIsSubmitting(true);
-
-        try {
-            const uploadedImageUrls: string[] = [];
-
-            for (const file of images) {
-                const presigned = await getPresignedUploadUrl(file.name, file.type);
-                if (!presigned) {
-                    throw new Error(`Failed to get presigned URL for ${file.name}`);
-                }
-
-                const success = await uploadFileToS3(presigned.uploadUrl, file);
-                if (!success) {
-                    throw new Error(`Failed to upload ${file.name}`);
-                }
-
-                const s3Url = `https://${presigned.bucket}.s3.amazonaws.com/${presigned.key}`;
-                uploadedImageUrls.push(s3Url);
-            }
-
-            const newRecipe: Omit<Recipe, 'id'> = {
-                title: recipeTitle.trim(), 
-                bodyrecipe: recipeBody,
-                tag: tagList.length > 0 ? tagList : undefined,
-                imageUrls: uploadedImageUrls,
-            } as any; 
-
-            const created = await createRecipe(newRecipe);
-
-            if (created) {
-                alert('Receptet laddades upp!');
-                resetForm();
-            } else {
-                throw new Error('Failed to create recipe.');
-            }
-        } catch (error) {
-            console.error(error);
-            alert('Något gick fel under uppladdningen.');
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    const resetForm = () => {
-        setRecipeTitle(''); 
-        setRecipeBody('');
-        setTagList([]); 
-        setCurrentTag('');
-        
-        images.forEach(file => {
-             try {
-                 const url = URL.createObjectURL(file);
-                 URL.revokeObjectURL(url);
-             } catch (e) { /* ignore */ }
-        });
-        
-        setImages([]);
-        
-        if (fileInputRef.current) {
-            fileInputRef.current.value = '';
-        }
-    };
-
-    const renderImagePreviews = () =>
-        images.map((img, index) => {
-            const url = URL.createObjectURL(img);
-            return (
-                <div className="image-preview-wrapper" key={index}>
-                    <img src={url} alt={`preview-${index}`} className="image-thumb" />
-                    <button
-                        type="button"
-                        className="remove-image-btn"
-                        onClick={() => removeImage(index)}
-                    >
-                        &times;
-                    </button>
-                </div>
-            );
-        });
-
-    const renderTagPills = () =>
-        tagList.map(tag => (
-            <span key={tag} className="tag-pill">
-                {tag}
+        return (
+            <div className="image-preview-wrapper" key={index}>
+                <img src={url} alt={`preview-${index}`} className="image-thumb" />
                 <button
                     type="button"
-                    className="remove-tag-btn"
-                    onClick={() => removeTag(tag)}
+                    className="remove-image-btn"
+                    onClick={() => removeImage(index)}
                 >
-                    <i className="bi bi-x"></i>
+                    &times;
                 </button>
-            </span>
-        ));
+            </div>
+        );
+});
+
+const renderTagPills = (tagList: string[], removeTag: (tag: string) => void) =>
+    tagList.map(tag => (
+        <span key={tag} className="tag-pill">
+            {tag}
+            <button
+                type="button"
+                className="remove-tag-btn"
+                onClick={() => removeTag(tag)}
+            >
+                <i className="bi bi-x"></i>
+            </button>
+        </span>
+));
+
+export default function AddPage() {
+    const {
+        editorKey,
+        recipeTitle,
+        recipeBody,
+        tagList,
+        currentTag,
+        images,
+        isSubmitting,
+        titleInputRef,
+        tagInputRef,
+        fileInputRef,
+        uploadButtonRef,
+        submitButtonRef,
+        handleTitleChange,
+        handleContentChange,
+        handleTagInputChange,
+        handleTagKeyDown,
+        removeTag,
+        handleImageChange,
+        removeImage,
+        handleSubmit,
+        triggerFileInput,
+        handleInputFocus,
+    } = useAddRecipeForm();
 
     return (
         <div className="wrapper-page">
@@ -215,6 +87,7 @@ export default function AddPage() {
                 
                 <label className="recipe-label">Recept</label>
                 <TiptapEditor
+                    key={editorKey} 
                     content={recipeBody}
                     onContentChange={handleContentChange}
                     nextElementRef={tagInputRef} 
@@ -243,7 +116,7 @@ export default function AddPage() {
                     spellCheck="false"
                     ref={tagInputRef}
                 />
-                <div className="tag-list">{renderTagPills()}</div>
+                <div className="tag-list">{renderTagPills(tagList, removeTag)}</div>
 
                 <label className="image-label">Bilduppladdning</label>
                 <button 
@@ -252,7 +125,7 @@ export default function AddPage() {
                     onClick={triggerFileInput}
                     onFocus={handleInputFocus}
                     ref={uploadButtonRef}
-                    tabIndex={3} // Ändrat från 3 till 4
+                    tabIndex={3}
                 >
                     Ladda upp
                 </button>
@@ -263,16 +136,16 @@ export default function AddPage() {
                     ref={fileInputRef}
                     onChange={handleImageChange}
                     style={{ display: 'none' }}
-                    tabIndex={-1} // Gömda input-fält ska inte ha en tabIndex > 0
+                    tabIndex={-1} 
                 />
 
-                <div className="image-preview-list">{renderImagePreviews()}</div>
+                <div className="image-preview-list">{renderImagePreviews(images, removeImage)}</div>
 
                 <button 
                     type="submit" 
                     className="btn-actual" 
                     disabled={isSubmitting} 
-                    tabIndex={4} // Ändrat från 5 till 5
+                    tabIndex={4}
                     onFocus={handleInputFocus}
                     ref={submitButtonRef}
                 >

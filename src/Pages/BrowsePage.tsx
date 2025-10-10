@@ -1,7 +1,7 @@
 import type { Recipe } from "../Utils/api";
 import { TagSuggestions, removeArticle } from "../Utils/api";
 import { useRecipeBrowser, getCardTitle, getCardTags, getCardImageUrl } from "../Hooks/useRecipeBrowser";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 const formatDate = (dateString: string): string => {
     try {
@@ -88,13 +88,13 @@ const RecipeModal = ({ recipe, mainImageUrl, closeModal, handleThumbnailClick }:
                     )}
                 </div>
 
-                <div className="modal-section">
-                    <h3>Skapad</h3>
+                <div className="modal-section article-info">
+                    <i className="bi bi-clock"></i>
                     <p>{formatDate(created)}</p>
                 </div>
 
-                <div className="modal-section">
-                    <h3>Kategori</h3>
+                <div className="modal-section article-info">
+                    <i className="bi bi-tags"></i>
                     <TagRenderer tags={tag} className="tag-list" />
                 </div>
 
@@ -110,16 +110,22 @@ const RecipeModal = ({ recipe, mainImageUrl, closeModal, handleThumbnailClick }:
     );
 };
 
-const removeArticleNelement = async (articleId: string) => {
-    const res = await removeArticle(articleId)
+const removeArticleNelement = async (articleId: string, onRemovalSuccess: (id: string) => void, recipeTitle: string) => {
+    const isConfirmed = window.confirm(`Är du säker på att du vill ta bort receptet "${recipeTitle}"? Detta kan inte ångras.`);
+    
+    if (isConfirmed) {
+        const res = await removeArticle(articleId)
 
-    if(res !== "" || undefined){
-        // Means success
-        console.log("article removed")
+        if(res !== "" || undefined){
+            console.log("article removed")
+            onRemovalSuccess(articleId);
+        }
+    } else {
+        console.log("Removal cancelled by user.");
     }
 }
 
-export default function Browsepage() {
+const Browsepage = () => {
     const {
         recipes,
         loading,
@@ -136,10 +142,17 @@ export default function Browsepage() {
         openModal,
         closeModal,
         handleThumbnailClick,
+        handleRecipeRemoval,
     } = useRecipeBrowser();
 
     const [tagSuggestions, setTagSuggestions] = useState<string[]>([]);
     const [debouncedSearchTag, setDebouncedSearchTag] = useState(searchTag);
+
+    const onRemoveClick = useCallback((e: React.MouseEvent<HTMLButtonElement>, recipe: Recipe) => {
+        e.stopPropagation(); 
+        const title = getCardTitle(recipe);
+        removeArticleNelement(recipe.Id, handleRecipeRemoval, title);
+    }, [handleRecipeRemoval]);
 
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -162,7 +175,6 @@ export default function Browsepage() {
             }
 
             try {
-                // Assuming TagSuggestions accepts a signal for aborting
                 const fetchedSuggestions = await TagSuggestions(debouncedSearchTag, signal); 
                 if (!signal.aborted) {
                     setTagSuggestions(fetchedSuggestions);
@@ -272,21 +284,18 @@ export default function Browsepage() {
                             <h3 className="recipe-card__title">{getCardTitle(recipe)}</h3>
 
                             <button 
-                                onClick={(e) => {
-                                    e.stopPropagation(); 
-                                    removeArticleNelement(recipe.Id);
-                                }}
+                                onClick={(e) => onRemoveClick(e, recipe)}
                             >
-                                Ta bort
+                                <i>Ta bort</i>
                             </button>
 
                             <div className="create-recipe-categories">
-                                <h4>Kategori:</h4>
+                                <i className="bi bi-tags"></i>
                                 <TagRenderer tags={getCardTags(recipe)} className="recipe-card__tags" />
                             </div>
                         
                             <div className="create-recipe-card">
-                                <h4>Skapad:</h4>
+                                <i className="bi bi-clock"></i>
                                 <p className="recipe-card__created-date">{formatDate(recipe.created)}</p>
                             </div>
 
@@ -311,4 +320,6 @@ export default function Browsepage() {
             )}
         </div>
     );
-}
+};
+
+export default Browsepage;

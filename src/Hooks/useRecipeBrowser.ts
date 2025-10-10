@@ -23,9 +23,6 @@ export const getCardTags = (recipe: Recipe): string[] => {
     return recipe.tag || [];
 };
 
-/**
- * Custom hook for managing state and logic for the recipe browsing page.
- */
 export const useRecipeBrowser = () => {
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [loading, setLoading] = useState(false);
@@ -41,7 +38,6 @@ export const useRecipeBrowser = () => {
     const [currentModalImageUrl, setCurrentModalImageUrl] = useState<string>('');
     const [showImages, setShowImages] = useState(true);
 
-    // Dependency array is cleaned up. We only need the state setters and PAGE_SIZE
     const fetchPage = useCallback(async (
         tag: string,
         limit: number,
@@ -49,9 +45,7 @@ export const useRecipeBrowser = () => {
         lastSK: string | null,
         isInitial: boolean
     ) => {
-        // Prevent loading multiple pages simultaneously
         if (loading && !isInitial) return;
-        // The hasMore check for subsequent pages is done in handleLoadMore, not here.
 
         setLoading(true);
         console.log("fetched");
@@ -68,7 +62,6 @@ export const useRecipeBrowser = () => {
                 setRecipes((prevRecipes) => (isInitial ? data.recipes : [...prevRecipes, ...data.recipes]));
                 setNextPK(data.nextPK || null);
                 setNextSK(data.nextSK || null);
-                // Determines if there are potentially more pages to load
                 setHasMore(!!data.nextPK && data.recipes.length === limit); 
             } else {
                 setHasMore(false);
@@ -78,52 +71,49 @@ export const useRecipeBrowser = () => {
             }
         } catch (error) {
             console.error("Fetch failed:", error);
-            // Handle error state gracefully
         } finally {
             setLoading(false);
         }
-    }, [loading]); // Only include 'loading' as a dependency to prevent simultaneous calls
+    }, [loading]);
 
-    // *** REMOVED THE PROBLEM-CAUSING useEffect HERE ***
-    // The initial fetch logic is now triggered directly by handleSearch.
-    
-    // We add a single useEffect to perform the *very first* load on mount if the search term is empty (e.g., initial state)
     useEffect(() => {
         if (recipes.length === 0 && !loading && hasMore) {
-            // Only runs once on mount, or after a full reset if no search term is present
             if (!currentSearchTerm) {
                  fetchPage("", PAGE_SIZE, null, null, true);
             }
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); // Empty dependency array means this runs only ONCE after mount.
+    }, [fetchPage, recipes.length, loading, hasMore, currentSearchTerm]);
 
     const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const trimmedTag = searchTag.trim().toLowerCase();
 
-        if (trimmedTag === currentSearchTerm) return; // Prevent re-search if already loaded
+        if (trimmedTag === currentSearchTerm) return;
 
-        // 1. Reset state
         setRecipes([]);
         setNextPK(null);
         setNextSK(null);
         setHasMore(true);
 
-        // 2. Update search term state
         setCurrentSearchTerm(trimmedTag);
         
-        // 3. Trigger the initial fetch directly
         fetchPage(trimmedTag, PAGE_SIZE, null, null, true);
     };
 
     const handleLoadMore = () => {
-        // Essential checks moved here for safety
         if (!hasMore || loading || !nextPK || !nextSK) return;
 
         fetchPage(currentSearchTerm, PAGE_SIZE, nextPK, nextSK, false);
     };
+    
+    const handleRecipeRemoval = useCallback((recipeId: string) => {
+        setRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.Id !== recipeId));
+        if (selectedRecipe && selectedRecipe.Id === recipeId) {
+            setSelectedRecipe(null);
+            setCurrentModalImageUrl('');
+        }
+    }, [selectedRecipe]);
 
     const toggleImageDisplay = useCallback(() => {
         setShowImages(prev => !prev);
@@ -159,5 +149,6 @@ export const useRecipeBrowser = () => {
         openModal,
         closeModal,
         handleThumbnailClick,
+        handleRecipeRemoval,
     };
 };
