@@ -22,14 +22,17 @@ export default function AuthPage() {
     const context = useContext(AuthContext);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        inputRefs.username.current?.focus();
-    },[])
-
+    // --- MODIFIED useEffect for focusing username/email on mount AND mode change ---
+    const inputRefs = {
+        username: useRef<HTMLInputElement>(null),
+        password: useRef<HTMLInputElement>(null),
+        confirmPassword: useRef<HTMLInputElement>(null),
+    };
+    
+    // Check for context and signIn function
     if (!context) {
         throw new Error("AuthPage must be used within an AuthContext.Provider");
     }
-
     const { signIn } = context; 
 
     const [formData, setFormData] = useState<AuthFormData>({
@@ -41,13 +44,15 @@ export default function AuthPage() {
     const [errors, setErrors] = useState<AuthFormErrors>({});
     const [mode, setMode] = useState<AuthMode>('signIn');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    
+    // This effect runs on mount and every time 'mode' changes
+    useEffect(() => {
+        // Focus the username input whenever the component mounts OR the mode changes
+        // The optional chaining ?. is important as the ref might not be attached yet
+        inputRefs.username.current?.focus(); 
+    }, [mode]); 
 
-    const inputRefs = {
-        username: useRef<HTMLInputElement>(null),
-        password: useRef<HTMLInputElement>(null),
-        confirmPassword: useRef<HTMLInputElement>(null),
-    };
-
+    // Keeps the scroll to top behavior when mode changes
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [mode]); 
@@ -139,7 +144,8 @@ export default function AuthPage() {
     const toggleMode = () => {
         setFormData({ username: '', password: '', confirmPassword: '' });
         setErrors({});
-        setMode(prevMode => prevMode === 'signIn' ? 'signUp' : 'signIn');
+        // Changing the mode here triggers the useEffect above
+        setMode(prevMode => prevMode === 'signIn' ? 'signUp' : 'signIn'); 
     };
 
     const handleSignIn = async () => {
@@ -219,7 +225,7 @@ export default function AuthPage() {
     const titleText = isSignIn ? "Logga in" : "Registrera dig";
     const buttonText = isSignIn ? (isSubmitting ? "Loggar in..." : "Logga in") : (isSubmitting ? "Skapar konto..." : "Skapa konto");
     // const switchText = isSignIn ? "Inget konto?" : "Har du redan ett konto?";
-    const switchLinkText = isSignIn ? "Klicka här för att registrera dig" : "Klicka här för att logga in";
+    const switchLinkText = isSignIn ? "Registrera" : "Logga in";
 
     return (
         <div className="wrapper-page wrapper-auth">
@@ -242,6 +248,7 @@ export default function AuthPage() {
                         onFocus={handleInputFocus}
                         required
                         disabled={isSubmitting}
+                        placeholder="Mata in E-post"
                     />
                     {errors.username && <p className="validation-error">{errors.username}</p>}
                 </div>
@@ -258,6 +265,7 @@ export default function AuthPage() {
                         onFocus={handleInputFocus}
                         required
                         disabled={isSubmitting}
+                        placeholder="Mata in Lösenord"
                     />
                     {errors.password && <p className="validation-error">{errors.password}</p>}
                 </div>
@@ -275,6 +283,7 @@ export default function AuthPage() {
                             onFocus={handleInputFocus}
                             required
                             disabled={isSubmitting}
+                            placeholder="Mata in Lösenord Igen"
                         />
                         {errors.confirmPassword && <p className="validation-error">{errors.confirmPassword}</p>}
                     </div>
@@ -285,11 +294,9 @@ export default function AuthPage() {
                 </button>
             </form>
 
-            <h3 onClick={toggleMode} style={{ cursor: 'pointer' }}>
-                {/* {switchText}  */}
-                {/* &nbsp;&nbsp; */}
-                <i>{switchLinkText}</i>
-            </h3>
+            <button onClick={toggleMode}>
+                {switchLinkText}
+            </button>
         </div>
     );
 }

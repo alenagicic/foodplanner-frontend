@@ -35,14 +35,8 @@
        column-gap: 0.2rem;
   margin-top: 1rem;
   font-size: 1.2rem;
-}
-.wrapper-auth h3 i {
-  text-decoration: underline;
-  font-style: normal;
-}
-.wrapper-auth h3 i:hover {
-  cursor: pointer;
-  color: #5F9EA0;
+  background-color: #5F9EA0;
+  padding: 0.5rem;
 }
 
 @media screen and (max-width: 820px) {
