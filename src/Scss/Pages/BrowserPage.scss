@@ -81,26 +81,27 @@
           cursor: pointer;
           font-weight: 600; 
           border: 1px solid #f4adad;
-          background-color: #f4adad;
-          color: #6A0000;
+          background-color: #f4adadb5;
+          color: #8D2626;
           display: flex;
           align-items: center;
           justify-content: center;
           transition: all 0.2s ease;
 
           &:hover{
-            outline: 2px solid #6A0000;
+            outline: 2px solid #8D2626!important;
           }
 
           &:active{
-            outline: 2px solid #6A0000!important;
+            outline: 2px solid #8D2626!important;
           }
 
           i{
             font-style: normal;
             margin: 0px;
             padding: 0px;
-            font-size: 1rem;
+            font-size: 0.8rem;
+            letter-spacing: 0.8px;
           }
         }
 
@@ -124,11 +125,14 @@
               text-transform: capitalize;
               border-radius: 0.4rem;
               font-weight: 500;
-              background-color: #ACE1AF;
+              border: 1px solid #ace1ae;
+              background-color: #ace1ae9e;
               color: #163832;
               padding: 0.2rem;
               padding-left: 0.5rem;
               padding-right: 0.5rem;
+              font-size: 0.8rem;
+              letter-spacing: 0.8px;
             }
           }
         }
@@ -147,6 +151,8 @@
           p {
             margin: 0px;
             padding: 0px;
+            color: #555;
+            font-size: 0.9rem;
           }
         }
       }
@@ -218,9 +224,6 @@
         padding: 0px;
       }
 
-      &:hover {
-        outline: none;
-      }
     }
 
     .modal-image-gallery {
@@ -287,14 +290,14 @@
         align-items: center;
       }
       
-        span{
-          margin-right: 0.5rem;
-          border: 1px solid #ddd;
-          padding: 0.4rem;
-          text-transform: lowercase;
-          background-color: #e0ddd7;
-          color: #333;
-        }
+      span{
+        margin-right: 0.5rem;
+        border: 1px solid #ddd;
+        padding: 0.4rem;
+        text-transform: lowercase;
+        background-color: #e0ddd7;
+        color: #333;
+      }
       
     }
 
