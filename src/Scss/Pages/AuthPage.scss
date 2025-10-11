@@ -17,6 +17,7 @@
         flex-direction: column;
         row-gap: 1rem;
         padding-bottom: 1rem;
+        box-sizing: border-box;
 
         div{
             display: flex;
@@ -51,7 +52,6 @@
         }
     }
 }
-
 
 .validation-error{
     background-color: #5F9EA0;

@@ -16,6 +16,7 @@
   flex-direction: column;
   row-gap: 1rem;
   padding-bottom: 1rem;
+  box-sizing: border-box;
 }
 .wrapper-auth form div {
   display: flex;
