@@ -67,16 +67,17 @@
   border-radius: 1rem;
   cursor: pointer;
   font-weight: 600;
-  border: 1px solid #f4adad;
-  background-color: rgba(244, 173, 173, 0.7098039216);
-  color: #8D2626;
+  border: 1px solid #f9c2c2;
+  background-color: rgba(249, 206, 206, 0.7098039216);
+  color: #da3d3d;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  max-height: 2rem !important;
 }
 .wrapper-browse .recipe-grid .recipe-card__content button:hover {
-  outline: 2px solid #8D2626 !important;
+  outline: 2px solid #f9c2c2 !important;
 }
 .wrapper-browse .recipe-grid .recipe-card__content button:active {
   outline: 2px solid #8D2626 !important;
@@ -86,7 +87,6 @@
   margin: 0px;
   padding: 0px;
   font-size: 0.8rem;
-  letter-spacing: 0.8px;
 }
 .wrapper-browse .recipe-grid .recipe-card__content .create-recipe-categories {
   display: flex;
@@ -108,14 +108,13 @@
   text-transform: capitalize;
   border-radius: 0.4rem;
   font-weight: 500;
-  border: 1px solid #ace1ae;
-  background-color: rgba(172, 225, 174, 0.6196078431);
-  color: #163832;
+  background-color: #eeeeee;
+  border: 1px solid #e8e8e8;
+  color: #444;
   padding: 0.2rem;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   font-size: 0.8rem;
-  letter-spacing: 0.8px;
 }
 .wrapper-browse .recipe-grid .recipe-card__content .create-recipe-card {
   display: flex;
@@ -262,6 +261,12 @@
   display: flex;
   -moz-column-gap: 0.5rem;
        column-gap: 0.5rem;
+  align-items: center;
+}
+.modal-overlay .modal-content .article-info .download-btn {
+  margin-left: auto;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .tag-pill-detail {
@@ -284,4 +289,12 @@
 
 .loading-recipes-for {
   margin-top: 1rem;
+}
+
+.tiptap-output-area p,
+.tiptap-output-area h1,
+.tiptap-output-area h2 {
+  margin-bottom: 1em;
+  margin-top: 0;
+  margin-bottom: 1em !important;
 }

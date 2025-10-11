@@ -1,5 +1,6 @@
 import type { Recipe } from "../Utils/api";
 import { TagSuggestions, removeArticle } from "../Utils/api";
+import { generateAndDownloadPdf } from '../Utils/helpers'
 import { useRecipeBrowser, getCardTitle, getCardTags, getCardImageUrl } from "../Hooks/useRecipeBrowser";
 import { useEffect, useState, useCallback } from "react";
 
@@ -91,6 +92,16 @@ const RecipeModal = ({ recipe, mainImageUrl, closeModal, handleThumbnailClick }:
                 <div className="modal-section article-info">
                     <i className="bi bi-clock"></i>
                     <p>{formatDate(created)}</p>
+
+                    <button onClick={() => {
+                        generateAndDownloadPdf({
+                            htmlString: bodyrecipe, 
+                            htmlHeader: `<h1 style="color: #5F9EA0">${title}</h1>`
+                        });
+                    }} className="download-btn">
+                        Ladda ner
+                    </button>
+
                 </div>
 
                 <div className="modal-section article-info">
@@ -101,7 +112,7 @@ const RecipeModal = ({ recipe, mainImageUrl, closeModal, handleThumbnailClick }:
                 <div className="modal-section modal-recipe-body">
                     <h3>Recept</h3>
                     <div
-                        className="modal-bodyrecipe"
+                        className="tiptap-content-output tiptap-output-area"
                         dangerouslySetInnerHTML={{ __html: bodyrecipe }}
                     />
                 </div>
