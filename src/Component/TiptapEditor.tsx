@@ -3,7 +3,6 @@ import { useEditor, EditorContent, Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit'; 
 import IconPicker from './IconPicker'; 
 
-// --- (TiptapToolbar Component är oförändrad och korrekt) ---
 interface TiptapToolbarProps {
     editor: Editor | null;
     toggleIconPicker: () => void;
@@ -101,7 +100,6 @@ export default function TiptapEditor({ content, onContentChange, nextElementRef 
                 bulletList: false,
                 listItem: false,
                 blockquote: false,
-                // Ingen specifik konfiguration för Paragraph här.
             }),
         ],
         content: content,

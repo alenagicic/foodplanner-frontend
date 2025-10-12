@@ -17,8 +17,6 @@ export default function FloatingNavbar() {
   return (
     <nav className="floating-nav d-flex flex-column align-items-center p-3 shadow rounded">
 
-
-      {/* Create */}
       <button className="nav-item" data-label="Skapa"
         onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
           e.currentTarget.blur();
@@ -27,7 +25,6 @@ export default function FloatingNavbar() {
         <i className="bi bi-plus-circle fs-3"></i>
       </button>
 
-      {/* Browse */}
       <button className="nav-item" data-label="Bläddra"
         onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
           e.currentTarget.blur();
@@ -36,7 +33,6 @@ export default function FloatingNavbar() {
         <i className="bi bi-search fs-3"></i>
       </button>
 
-      {/* Browse */}
       <button className="nav-item" data-label="Logga ut" onClick={signOut}>
         <i className="bi bi-door-closed"></i>
       </button>

@@ -22,10 +22,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    /**
-     * Attempts to load the user from a token in localStorage on initial load.
-     * NOTE: In a production app, you would also validate the token (e.g., check expiry) here.
-     */
     useEffect(() => {
         const token = localStorage.getItem('token');
         const storedUsername = localStorage.getItem('username');

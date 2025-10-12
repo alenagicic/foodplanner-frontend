@@ -96,7 +96,6 @@ export async function fetchRecipesListPaginated(
     lastSK: string = "" 
 ): Promise<PaginatedRecipes | undefined> {
     
-    // Allows tag to be null, or an empty string for "fetch all"
     const fetchAll = tag === null || tag === ""; 
 
     if (!fetchAll && !tag) {
@@ -110,8 +109,6 @@ export async function fetchRecipesListPaginated(
         if (fetchAll) {
             url += `&all=true`;
         } else {
-            // CRITICAL FIX: Encode the tag value.
-            // If tag contains '&' or other special chars, it must be encoded.
             url += `&tag=${encodeURIComponent(tag)}`; 
         }
         

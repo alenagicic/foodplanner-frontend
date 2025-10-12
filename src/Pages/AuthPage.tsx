@@ -22,14 +22,12 @@ export default function AuthPage() {
     const context = useContext(AuthContext);
     const navigate = useNavigate();
 
-    // --- MODIFIED useEffect for focusing username/email on mount AND mode change ---
     const inputRefs = {
         username: useRef<HTMLInputElement>(null),
         password: useRef<HTMLInputElement>(null),
         confirmPassword: useRef<HTMLInputElement>(null),
     };
     
-    // Check for context and signIn function
     if (!context) {
         throw new Error("AuthPage must be used within an AuthContext.Provider");
     }
@@ -45,24 +43,18 @@ export default function AuthPage() {
     const [mode, setMode] = useState<AuthMode>('signIn');
     const [isSubmitting, setIsSubmitting] = useState(false);
     
-    // This effect runs on mount and every time 'mode' changes
     useEffect(() => {
-        // Focus the username input whenever the component mounts OR the mode changes
-        // The optional chaining ?. is important as the ref might not be attached yet
         inputRefs.username.current?.focus(); 
     }, [mode]); 
 
-    // Keeps the scroll to top behavior when mode changes
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [mode]); 
 
-    // --- New handler for focusing and scrolling on input focus ---
     const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
         e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
     };
 
-    // --- Validation and Handlers (Logic remains unchanged) ---
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordPattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,}$/;
 
@@ -144,7 +136,6 @@ export default function AuthPage() {
     const toggleMode = () => {
         setFormData({ username: '', password: '', confirmPassword: '' });
         setErrors({});
-        // Changing the mode here triggers the useEffect above
         setMode(prevMode => prevMode === 'signIn' ? 'signUp' : 'signIn'); 
     };
 
@@ -224,7 +215,6 @@ export default function AuthPage() {
     const isSignIn = mode === 'signIn';
     const titleText = isSignIn ? "Logga in" : "Registrera dig";
     const buttonText = isSignIn ? (isSubmitting ? "Loggar in..." : "Logga in") : (isSubmitting ? "Skapar konto..." : "Skapa konto");
-    // const switchText = isSignIn ? "Inget konto?" : "Har du redan ett konto?";
     const switchLinkText = isSignIn ? "Registrera" : "Logga in";
 
     return (

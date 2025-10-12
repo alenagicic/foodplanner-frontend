@@ -1,5 +1,3 @@
-// useTagSuggestions.ts
-
 import { useState, useEffect } from 'react';
 import { TagSuggestions } from "../Utils/api";
 
@@ -9,7 +7,6 @@ export const useTagSuggestions = (tagPrefix: string): string[] => {
     const [suggestions, setSuggestions] = useState<string[]>([]);
     const [debouncedPrefix, setDebouncedPrefix] = useState(tagPrefix);
 
-    // 1. Debounce the tagPrefix input
     useEffect(() => {
         const handler = setTimeout(() => {
             setDebouncedPrefix(tagPrefix);
