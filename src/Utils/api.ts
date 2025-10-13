@@ -1,5 +1,5 @@
-const apiUrl = "https://a0rrvbt35k.execute-api.eu-north-1.amazonaws.com/Prod";
-const API_KEY = "mYGfM1kFHk4t1RCPHjdGy3WgU1njrzwb50IrKKt4"; 
+const apiUrl =  import.meta.env.VITE_API_URL;
+const API_KEY = import.meta.env.VITE_API_KEY; 
 
 export interface Recipe {
     Id: string;
