@@ -243,6 +243,8 @@ export async function createAccount(account: Omit<Account, 'id'>): Promise<strin
 }
 
 export async function SigninAccount(account: Omit<Account, 'id'>): Promise<string | undefined> {
+    
+    console.log("Embedded API URL:", apiUrl);
 
     try {
         const response = await fetch(`${apiUrl}/auth/signin`, {
