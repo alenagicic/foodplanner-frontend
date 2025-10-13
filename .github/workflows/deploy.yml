@@ -1,4 +1,4 @@
-name: Deploy Static Site to S3
+name: Deploy Static Site to S3 and Invalidate Cache
 
 on:
   push:
@@ -30,9 +30,9 @@ jobs:
           VITE_API_URL: ${{ secrets.VITE_API_URL }} 
           VITE_API_KEY: ${{ secrets.VITE_API_KEY }} 
         run: |
-          npm run build  # This builds the app using the provided environment variables
+          npm run build 
 
-      - name: Configure AWS Credentials using Access Keys
+      - name: Configure AWS Credentials for S3 and CloudFront
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
@@ -41,5 +41,13 @@ jobs:
 
       - name: Deploy to S3
         run: |
-          echo "Starting synchronization of 'dist/' to S3://${{ secrets.S3_BUCKET_NAME }}"  # Log the deploy step
-          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }} --delete  # Deploys the contents of the 'dist/' folder to S3
+          echo "Starting synchronization of 'dist/' to S3://${{ secrets.S3_BUCKET_NAME }}"
+          # Deploys the contents of the 'dist/' folder to S3
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }} --delete  
+
+      - name: Invalidate CloudFront Cache
+        run: |
+          echo "Creating CloudFront Invalidation for distribution ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}"
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
