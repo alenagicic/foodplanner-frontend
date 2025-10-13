@@ -1,5 +1,12 @@
-const apiUrl =  import.meta.env.VITE_API_URL;
-const API_KEY = import.meta.env.VITE_API_KEY; 
+const apiUrl: string = (import.meta.env.VITE_API_URL as string);
+const API_KEY: string = (import.meta.env.VITE_API_KEY as string);
+
+if (!apiUrl) {
+    console.error("VITE_API_URL is missing! Check build step and .env configuration.");
+    throw new Error("API URL is not configured.");
+}
+
+console.log(apiUrl)
 
 export interface Recipe {
     Id: string;
