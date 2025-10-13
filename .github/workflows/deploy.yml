@@ -25,26 +25,21 @@ jobs:
         run: |
           npm install
 
-      - name: Set environment variables for build
-        run: |
-          echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> $GITHUB_ENV
-          echo "VITE_API_KEY=${{ secrets.VITE_API_KEY }}" >> $GITHUB_ENV
-
       - name: Build the app with Vite
         env:
-          VITE_API_URL: ${{ secrets.VITE_API_URL }}
-          VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL }} 
+          VITE_API_KEY: ${{ secrets.VITE_API_KEY }} 
         run: |
-          npm run build
+          npm run build  # This builds the app using the provided environment variables
 
       - name: Configure AWS Credentials using Access Keys
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-north-1
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
+          aws-region: eu-north-1 
 
       - name: Deploy to S3
         run: |
-          echo "Starting synchronization of 'dist/' to S3://${{ secrets.S3_BUCKET_NAME }}"
-          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }} --delete
+          echo "Starting synchronization of 'dist/' to S3://${{ secrets.S3_BUCKET_NAME }}"  # Log the deploy step
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }} --delete  # Deploys the contents of the 'dist/' folder to S3
