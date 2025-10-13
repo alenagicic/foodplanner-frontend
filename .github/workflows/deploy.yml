@@ -21,14 +21,20 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Install dependencies
+        run: |
+          npm install
+
       - name: Set environment variables for build
         run: |
           echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> $GITHUB_ENV
           echo "VITE_API_KEY=${{ secrets.VITE_API_KEY }}" >> $GITHUB_ENV
 
-      - name: Install dependencies and build
+      - name: Build the app with Vite
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
         run: |
-          npm install
           npm run build
 
       - name: Configure AWS Credentials using Access Keys
