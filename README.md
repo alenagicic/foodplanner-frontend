@@ -1,18 +1,10 @@
-🍽️ Matabas — Your Personal Recipe Organizer
-
-www.matabas.se
+🍽️ Foodplanner — Your Personal Recipe Organizer
 
 Save, search, and share your favorite recipes with powerful filtering, multi-image support, and downloadable PDFs.
 
-🚀 Try It Out
-
-    Username: test@gmail.com
-
-    Password: Verysecurepassword123!
-
 📝 About the Project
 
-    Matabas is a modern, serverless recipe management platform built for simplicity and personalization.
+    Foodplanner is a modern, serverless recipe management platform built for simplicity and personalization.
 
     Frontend: React
 

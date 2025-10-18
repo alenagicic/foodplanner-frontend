@@ -9,7 +9,7 @@ export default function Header() {
       
       <div className='wrapper-svg-header'>
         <h2 className="header-great-vibes">
-          Matabas.se
+          Foodplanner
         </h2>
       </div>
    
